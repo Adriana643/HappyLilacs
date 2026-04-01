@@ -1,26 +1,33 @@
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Image } from 'expo-image';
+import { Pressable, StyleSheet, Text, View, type StyleProp, type ViewStyle } from 'react-native';
 
 import { IconSymbol } from '@/components/ui/icon-symbol';
 import { AppColors } from '@/constants/app-colors';
-import type { PopularPlant } from '@/constants/sample-plants';
+import type { LibraryPlant } from '@/services/perenual';
 
 type Props = {
-  plant: PopularPlant;
+  plant: LibraryPlant;
   onAdd: () => void;
+  /** Overrides default 168×168 (e.g. Library search grid). */
+  style?: StyleProp<ViewStyle>;
 };
 
-export function PopularPlantCard({ plant, onAdd }: Props) {
+export function PopularPlantCard({ plant, onAdd, style }: Props) {
   return (
-    <View style={styles.card}>
+    <View style={[styles.card, style]}>
       <Pressable
         style={styles.addButton}
         onPress={onAdd}
         accessibilityLabel={`Add ${plant.name}`}>
         <Text style={styles.addButtonText}>+</Text>
       </Pressable>
-      <View style={styles.imagePlaceholder}>
-        <IconSymbol name="leaf.fill" size={48} color={AppColors.muted} />
-      </View>
+      {plant.imageUrl ? (
+        <Image source={{ uri: plant.imageUrl }} style={styles.image} contentFit="contain" />
+      ) : (
+        <View style={styles.imagePlaceholder}>
+          <IconSymbol name="leaf.fill" size={48} color={AppColors.muted} />
+        </View>
+      )}
       <View style={styles.labels}>
         <Text style={styles.fits}>{plant.fitsLabel}</Text>
         <Text style={styles.name}>{plant.name}</Text>
@@ -55,6 +62,13 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: AppColors.body,
     marginTop: -2,
+  },
+  image: {
+    position: 'absolute',
+    right: -8,
+    top: 4,
+    width: 110,
+    height: 110,
   },
   imagePlaceholder: {
     position: 'absolute',
