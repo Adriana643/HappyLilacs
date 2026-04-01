@@ -5,6 +5,7 @@ import 'react-native-reanimated';
 
 import { useColorScheme } from '@/hooks/use-color-scheme';
 
+/** Route group that hosts the bottom tab navigator (name does not appear in URLs). */
 export const unstable_settings = {
   anchor: '(tabs)',
 };

@@ -4,12 +4,12 @@ import { ScreenTopBanner } from '@/components/screen-top-banner';
 import { ThemedText } from '@/components/themed-text';
 import { AppColors } from '@/constants/app-colors';
 
-export default function HomeScreen() {
+export default function MyPlantsScreen() {
   return (
     <View style={styles.screen}>
-      <ScreenTopBanner title="Home" />
+      <ScreenTopBanner title="My Plants" />
       <View style={styles.body}>
-        <ThemedText style={styles.sub}>Your dashboard will appear here.</ThemedText>
+        <ThemedText style={styles.sub}>Your collection will appear here.</ThemedText>
       </View>
     </View>
   );
