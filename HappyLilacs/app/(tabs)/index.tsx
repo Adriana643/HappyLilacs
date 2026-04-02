@@ -24,6 +24,7 @@ const calendarDays = Array.from({ length: 7 }, (_, i) => {
   const d = new Date(today);
   d.setDate(today.getDate() - 1 + i);
   return {
+    key: `cal-${i}`,
     date: d.getDate(),
     month: MONTH_NAMES[d.getMonth()],
     dayName: DAY_NAMES[d.getDay()],
@@ -55,7 +56,6 @@ async function fetchPlantDetails(id: number): Promise<Plant | null> {
   }
 }
 
-// Replace these IDs with however you store the user's saved plant IDs
 const MY_PLANT_IDS = [3277, 1168];
 
 export default function HomeScreen() {
@@ -72,8 +72,8 @@ export default function HomeScreen() {
     loadPlants();
   }, []);
 
-  const alerts = plants.map((plant) => ({
-    id: String(plant.id),
+  const alerts = plants.map((plant, i) => ({
+    key: `alert-${i}-${plant.id}`,
     title: `Water your ${plant.name}`,
     subtitle: `Water ${plant.wateringFrequency.toLowerCase()} — tap for care details`,
     imageUrl: plant.imageUrl,
@@ -96,8 +96,8 @@ export default function HomeScreen() {
           <ActivityIndicator style={styles.loader} size="large" color={AppColors.tabBar} />
         ) : (
           <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.plantsRow}>
-            {plants.map((plant) => (
-              <View key={plant.id} style={styles.plantCard}>
+            {plants.map((plant, i) => (
+              <View key={`plant-${i}-${plant.id}`} style={styles.plantCard}>
                 {plant.imageUrl ? (
                   <Image source={{ uri: plant.imageUrl }} style={styles.plantImage} />
                 ) : (
@@ -121,7 +121,7 @@ export default function HomeScreen() {
         >
           {calendarDays.map((day) => (
             <TouchableOpacity
-              key={`${day.month}-${day.date}`}
+              key={day.key}
               style={[styles.dayChip, day.isToday && styles.dayChipActive]}
             >
               <ThemedText style={[styles.dayMonth, day.isToday && styles.dayTextActive]}>
@@ -142,22 +142,24 @@ export default function HomeScreen() {
         {loading ? (
           <ActivityIndicator style={styles.loader} color={AppColors.tabBar} />
         ) : (
-          alerts.map((alert) => (
-            <TouchableOpacity key={alert.id} style={styles.alertCard}>
-              {alert.imageUrl ? (
-                <Image source={{ uri: alert.imageUrl }} style={styles.alertImage} />
-              ) : (
-                <View style={[styles.alertImage, styles.plantImageFallback]}>
-                  <Ionicons name="leaf-outline" size={20} color={AppColors.muted} />
+          <View>
+            {alerts.map((alert) => (
+              <TouchableOpacity key={alert.key} style={styles.alertCard}>
+                {alert.imageUrl ? (
+                  <Image source={{ uri: alert.imageUrl }} style={styles.alertImage} />
+                ) : (
+                  <View style={[styles.alertImage, styles.plantImageFallback]}>
+                    <Ionicons name="leaf-outline" size={20} color={AppColors.muted} />
+                  </View>
+                )}
+                <View style={styles.alertText}>
+                  <ThemedText style={styles.alertTitle}>{alert.title}</ThemedText>
+                  <ThemedText style={styles.alertSub} numberOfLines={1}>{alert.subtitle}</ThemedText>
                 </View>
-              )}
-              <View style={styles.alertText}>
-                <ThemedText style={styles.alertTitle}>{alert.title}</ThemedText>
-                <ThemedText style={styles.alertSub} numberOfLines={1}>{alert.subtitle}</ThemedText>
-              </View>
-              <Ionicons name="chevron-forward" size={18} color={AppColors.muted} />
-            </TouchableOpacity>
-          ))
+                <Ionicons name="chevron-forward" size={18} color={AppColors.muted} />
+              </TouchableOpacity>
+            ))}
+          </View>
         )}
 
       </ScrollView>
