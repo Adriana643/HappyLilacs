@@ -38,6 +38,8 @@ The target audience for the app is individuals with a busy schedule (students, p
    ```
    BASE_URL=https://perenual.com/api
    PERENUAL_API_KEY=[INSERT PERENUAL API KEY HERE]
+   EXPO_PUBLIC_SUPABASE_URL=[value here]
+   EXPO_PUBLIC_SUPABASE_ANON_KEY=[value here]
    ```
 
 3. Start the app
