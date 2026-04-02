@@ -54,7 +54,7 @@ export default function RegisterScreen() {
     setLoading(true);
     try {
       await signUpWithEmail(email, password);
-      Alert.alert('Account created', 'Check your email to confirm your account.');
+      Alert.alert('Account created');
       router.back();
     } catch (err: any) {
       Alert.alert('Sign up failed', err.message);
