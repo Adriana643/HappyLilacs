@@ -15,7 +15,7 @@
       "adaptiveIcon": {
         "backgroundColor": "#B39AC2",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
-        "backgroundImage": "./assets/images/lilacs-wallpaper.png",
+        "backgroundImage": "./assets/images/lilacs-wallpaper.jpg",
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
       "edgeToEdgeEnabled": true,
@@ -30,7 +30,7 @@
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/lilacs-wallpaper.png",
+          "image": "./assets/images/lilacs-wallpaper.jpg",
           "imageWidth": 200,
           "resizeMode": "contain",
           "backgroundColor": "#B39AC2",
