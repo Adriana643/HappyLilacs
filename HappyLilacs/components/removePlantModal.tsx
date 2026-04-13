@@ -6,13 +6,10 @@ type Props = {
   visible: boolean;
   plantName: string;
   onClose: () => void;
+  onConfirm: () => void;
 };
 
-export default function RemovePlantModal({
-  visible,
-  plantName,
-  onClose,
-}: Props) {
+export default function RemovePlantModal({ visible, plantName, onClose, onConfirm }: Props) {
   return (
     <Modal visible={visible} transparent animationType="fade">
       <View style={styles.overlay}>
@@ -20,16 +17,22 @@ export default function RemovePlantModal({
           <View style={styles.topShape} />
           <View style={styles.bottomShape} />
 
-          <ThemedText style={styles.title}>Plant Removed:</ThemedText>
+          <ThemedText style={styles.title}>Remove Plant?</ThemedText>
           <ThemedText style={styles.plantName}>{plantName}</ThemedText>
 
           <ThemedText style={styles.subtitle}>
             You can add it back via the Library.
           </ThemedText>
 
-          <TouchableOpacity style={styles.button} onPress={onClose}>
-            <ThemedText style={styles.buttonText}>Understood!</ThemedText>
-          </TouchableOpacity>
+          <View style={styles.buttons}>
+            <TouchableOpacity style={styles.cancelButton} onPress={onClose}>
+              <ThemedText style={styles.cancelText}>Cancel</ThemedText>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={styles.confirmButton} onPress={onConfirm}>
+              <ThemedText style={styles.confirmText}>Remove</ThemedText>
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
     </Modal>
@@ -54,50 +57,27 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   topShape: {
-    position: 'absolute',
-    top: -10,
-    right: -10,
-    width: 120,
-    height: 120,
-    borderRadius: 60,
+    position: 'absolute', top: -10, right: -10,
+    width: 120, height: 120, borderRadius: 60,
     backgroundColor: 'rgba(110,77,149,0.2)',
   },
   bottomShape: {
-    position: 'absolute',
-    bottom: -20,
-    left: -20,
-    width: 120,
-    height: 120,
-    borderRadius: 60,
+    position: 'absolute', bottom: -20, left: -20,
+    width: 120, height: 120, borderRadius: 60,
     backgroundColor: 'rgba(110,77,149,0.15)',
   },
-  title: {
-    fontSize: 18,
-    fontWeight: '800',
-    color: '#4C3E7E',
-    marginBottom: 6,
+  title: { fontSize: 18, fontWeight: '800', color: '#4C3E7E', marginBottom: 6 },
+  plantName: { fontSize: 22, fontWeight: '800', color: '#FFF', marginBottom: 20 },
+  subtitle: { fontSize: 16, color: '#FFF', textAlign: 'center', marginBottom: 24 },
+  buttons: { flexDirection: 'row', gap: 12 },
+  cancelButton: {
+    flex: 1, backgroundColor: 'rgba(255,255,255,0.3)',
+    paddingVertical: 12, borderRadius: 12, alignItems: 'center',
   },
-  plantName: {
-    fontSize: 22,
-    fontWeight: '800',
-    color: '#FFF',
-    marginBottom: 20,
+  cancelText: { color: '#FFF', fontSize: 16, fontWeight: '700' },
+  confirmButton: {
+    flex: 1, backgroundColor: '#D85B57',
+    paddingVertical: 12, borderRadius: 12, alignItems: 'center',
   },
-  subtitle: {
-    fontSize: 16,
-    color: '#FFF',
-    textAlign: 'center',
-    marginBottom: 24,
-  },
-  button: {
-    backgroundColor: '#5D4A8D',
-    paddingHorizontal: 24,
-    paddingVertical: 12,
-    borderRadius: 12,
-  },
-  buttonText: {
-    color: '#FFF',
-    fontSize: 16,
-    fontWeight: '800',
-  },
+  confirmText: { color: '#FFF', fontSize: 16, fontWeight: '800' },
 });

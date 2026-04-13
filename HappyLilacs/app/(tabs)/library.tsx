@@ -14,6 +14,7 @@ import { PlantAddedModal } from '@/components/library/plant-added-modal';
 import { PopularPlantCard } from '@/components/library/popular-plant-card';
 import { ScreenTopBanner } from '@/components/screen-top-banner';
 import { IconSymbol } from '@/components/ui/icon-symbol';
+import { savePlant } from '@/services/user-plants';
 import { AppColors } from '@/constants/app-colors';
 import { LIBRARY_MIN_SEARCH_LENGTH, useLibraryPlants } from '@/hooks/use-library-plants';
 /** Matches `content` horizontal padding — used to size the search grid to the visible column width. */
@@ -97,7 +98,19 @@ export default function LibraryScreen() {
                 <PopularPlantCard
                   key={plant.id}
                   plant={plant}
-                  onAdd={() => setAddedPlantName(plant.name)}
+                 // onAdd={() => setAddedPlantName(plant.name)}
+                 onAdd={async () => {
+                 await savePlant({
+                 id: Number(plant.id),
+                  title: plant.name,
+                  subtitle: plant.fitsLabel,
+                  image: plant.imageUrl ?? undefined,
+                   section: 'today',
+                  completed: false,
+                   });
+
+  setAddedPlantName(plant.name);
+}}
                 />
               ))}
             </ScrollView>
