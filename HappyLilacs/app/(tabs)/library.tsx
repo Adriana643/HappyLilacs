@@ -9,7 +9,6 @@ import {
   useWindowDimensions,
   View,
 } from 'react-native';
-
 import { PlantAddedModal } from '@/components/library/plant-added-modal';
 import { PopularPlantCard } from '@/components/library/popular-plant-card';
 import { ScreenTopBanner } from '@/components/screen-top-banner';
@@ -29,9 +28,9 @@ function chunkIntoPairs<T>(items: T[]): T[][] {
   }
   return rows;
 }
-
 export default function LibraryScreen() {
   const [addedPlantName, setAddedPlantName] = useState<string | null>(null);
+  const [selectedSection, setSelectedSection] = useState<'today' | 'other'>('today');
   const { width: windowWidth } = useWindowDimensions();
   const searchGridWidth = windowWidth - CONTENT_PADDING_H * 2;
   const searchCellSize = (searchGridWidth - SEARCH_GRID_GAP) / 2;
@@ -85,7 +84,38 @@ export default function LibraryScreen() {
             </View>
           ) : null}
 
-          <Text style={styles.sectionTitle}>Popular plants</Text>
+{/* 🔥 ADD YOUR TOGGLE HERE */}
+<View style={{ flexDirection: 'row', marginBottom: 12, gap: 10 }}>
+  <Pressable
+    onPress={() => setSelectedSection('today')}
+    style={{
+      paddingVertical: 6,
+      paddingHorizontal: 12,
+      borderRadius: 20,
+      backgroundColor: selectedSection === 'today' ? '#6B4FA0' : '#EDE8F5',
+    }}
+  >
+    <Text style={{ color: selectedSection === 'today' ? 'white' : '#6B4FA0' }}>
+      Today
+    </Text>
+  </Pressable>
+
+  <Pressable
+    onPress={() => setSelectedSection('other')}
+    style={{
+      paddingVertical: 6,
+      paddingHorizontal: 12,
+      borderRadius: 20,
+      backgroundColor: selectedSection === 'other' ? '#6B4FA0' : '#EDE8F5',
+    }}
+  >
+    <Text style={{ color: selectedSection === 'other' ? 'white' : '#6B4FA0' }}>
+      Future
+    </Text>
+  </Pressable>
+</View>
+
+<Text style={styles.sectionTitle}>Popular plants</Text>
           {loadingPopular ? (
             <ActivityIndicator style={styles.loader} size="large" color={AppColors.tabBar} />
           ) : (
@@ -105,7 +135,7 @@ export default function LibraryScreen() {
                   title: plant.name,
                   subtitle: plant.fitsLabel,
                   image: plant.imageUrl ?? undefined,
-                   section: 'today',
+                  section: selectedSection,                    
                   completed: false,
                    });
 

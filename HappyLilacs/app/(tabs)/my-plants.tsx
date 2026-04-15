@@ -63,8 +63,12 @@ function TodayPlantRow({ item, onToggle }: { item: PlantTask; onToggle: () => vo
 function OtherPlantRow({ item, isEditing, onRemovePress }: { item: PlantTask; isEditing: boolean; onRemovePress: () => void }) {
   return (
     <View style={styles.card}>
-      <TouchableOpacity activeOpacity={0.85} style={styles.row}>
-        <PlantThumb image={item.image} />
+<TouchableOpacity activeOpacity={0.85} style={styles.row}  onPress={() => {
+    if (!isEditing) {
+      router.push(`/(tabs)/plants-info?id=${item.id}`);
+    }
+  }}
+>       <PlantThumb image={item.image} />
         <View style={styles.textContainer}>
           <ThemedText numberOfLines={1} style={styles.title}>{item.title}</ThemedText>
           <ThemedText numberOfLines={1} style={styles.subtitle}>{item.subtitle}</ThemedText>
@@ -88,17 +92,25 @@ export default function MyPlantsScreen() {
   );
 
   async function loadPlants() {
-    const data = await getPlants();
-    const formatted = data.map((plant) => ({
-      id: String(plant.id),
-      title: plant.title,
-      subtitle: plant.subtitle,
-      image: plant.image,
-      section: plant.section,
-      completed: plant.completed ?? false,
-    }));
-    setPlants(formatted);
-  }
+  const data = await getPlants();
+
+  const filtered = data.filter(
+    (plant) =>
+      plant.title !== 'Plant task title' &&
+      plant.title !== 'Test Plant'
+  );
+
+  const formatted = filtered.map((plant) => ({
+    id: String(plant.id),
+    title: plant.title,
+    subtitle: plant.subtitle,
+    image: plant.image,
+    section: plant.section,
+    completed: plant.completed ?? false,
+  }));
+
+  setPlants(formatted);
+}
 
   const todayPlants = useMemo(() => plants.filter(p => p.section === 'today'), [plants]);
   const otherPlants = useMemo(() => plants.filter(p => p.section === 'other'), [plants]);
