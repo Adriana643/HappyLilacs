@@ -84,7 +84,6 @@ export default function LibraryScreen() {
             </View>
           ) : null}
 
-{/* 🔥 ADD YOUR TOGGLE HERE */}
 <View style={{ flexDirection: 'row', marginBottom: 12, gap: 10 }}>
   <Pressable
     onPress={() => setSelectedSection('today')}
@@ -128,7 +127,6 @@ export default function LibraryScreen() {
                 <PopularPlantCard
                   key={plant.id}
                   plant={plant}
-                 // onAdd={() => setAddedPlantName(plant.name)}
                  onAdd={async () => {
                  await savePlant({
                  id: Number(plant.id),

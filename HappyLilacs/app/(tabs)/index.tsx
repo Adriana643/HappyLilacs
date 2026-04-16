@@ -59,8 +59,6 @@ async function fetchPlantDetails(id: number): Promise<Plant | null> {
   }
 }
 
-//const MY_PLANT_IDS = [3277, 1168];
-
 export default function HomeScreen() {
   const [plants, setPlants] = useState<Plant[]>([]);
   const [loading, setLoading] = useState(true);
@@ -71,7 +69,6 @@ useEffect(() => {
     setLoading(true);
  
 
-    // ✅ Get logged in user
     const { data: { user } } = await supabase.auth.getUser();
     if (user) {
       setUsername(
@@ -81,7 +78,6 @@ useEffect(() => {
       );
     }
 
-    // ✅ Get saved plants (REAL DATA)
     const savedPlants = await getPlants();
 
     setPlants(savedPlants.map((p) => ({
