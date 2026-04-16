@@ -8,7 +8,6 @@ import type { LibraryPlant } from '@/services/perenual';
 type Props = {
   plant: LibraryPlant;
   onAdd: () => void;
-  /** Overrides default 168×168 (e.g. Library search grid). */
   style?: StyleProp<ViewStyle>;
 };
 
