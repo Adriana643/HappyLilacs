@@ -4,9 +4,12 @@ import { Ionicons } from '@expo/vector-icons';
 import { ScreenTopBanner } from '@/components/screen-top-banner';
 import { ThemedText } from '@/components/themed-text';
 import { AppColors } from '@/constants/app-colors';
+import { supabase } from '@/services/supabase';
+import { getPlants } from '@/services/user-plants';
+import { router } from 'expo-router';
+
 
 const PERENUAL_API_KEY = process.env.EXPO_PUBLIC_PERENUAL_API_KEY ?? '';
-
 const today = new Date();
 
 const todayLabel = today.toLocaleDateString('en-US', {
@@ -56,21 +59,43 @@ async function fetchPlantDetails(id: number): Promise<Plant | null> {
   }
 }
 
-const MY_PLANT_IDS = [3277, 1168];
+//const MY_PLANT_IDS = [3277, 1168];
 
 export default function HomeScreen() {
   const [plants, setPlants] = useState<Plant[]>([]);
   const [loading, setLoading] = useState(true);
+   const [username, setUsername] = useState('');
 
-  useEffect(() => {
-    async function loadPlants() {
-      setLoading(true);
-      const results = await Promise.all(MY_PLANT_IDS.map(fetchPlantDetails));
-      setPlants(results.filter((p): p is Plant => p !== null));
-      setLoading(false);
+useEffect(() => {
+  async function loadData() {
+    setLoading(true);
+ 
+
+    // ✅ Get logged in user
+    const { data: { user } } = await supabase.auth.getUser();
+    if (user) {
+      setUsername(
+        user.user_metadata?.username ||
+        user.email?.split('@')[0] ||
+        'User'
+      );
     }
-    loadPlants();
-  }, []);
+
+    // ✅ Get saved plants (REAL DATA)
+    const savedPlants = await getPlants();
+
+    setPlants(savedPlants.map((p) => ({
+      id: p.id,
+      name: p.title,
+      imageUrl: p.image ?? '',
+      wateringFrequency: p.subtitle || 'Regular',
+    })));
+
+    setLoading(false);
+  }
+
+  loadData();
+}, []);
 
   const alerts = plants.map((plant, i) => ({
     key: `alert-${i}-${plant.id}`,
@@ -81,7 +106,7 @@ export default function HomeScreen() {
 
   return (
     <View style={styles.screen}>
-      <ScreenTopBanner title="Welcome, Nara" />
+    <ScreenTopBanner title={`Welcome, ${username}`} />
       <ScrollView style={styles.body} showsVerticalScrollIndicator={false}>
 
         {/* My Plants */}
@@ -96,8 +121,12 @@ export default function HomeScreen() {
           <ActivityIndicator style={styles.loader} size="large" color={AppColors.tabBar} />
         ) : (
           <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.plantsRow}>
-            {plants.map((plant, i) => (
-              <View key={`plant-${i}-${plant.id}`} style={styles.plantCard}>
+           {plants.map((plant, i) => (
+            <TouchableOpacity
+             key={`plant-${i}-${plant.id}`}
+             style={styles.plantCard}
+              onPress={() => router.push(`/(tabs)/plants-info?id=${plant.id}`)}
+                >
                 {plant.imageUrl ? (
                   <Image source={{ uri: plant.imageUrl }} style={styles.plantImage} />
                 ) : (
@@ -106,7 +135,7 @@ export default function HomeScreen() {
                   </View>
                 )}
                 <ThemedText style={styles.plantName}>{plant.name}</ThemedText>
-              </View>
+             </TouchableOpacity>
             ))}
           </ScrollView>
         )}
@@ -183,7 +212,7 @@ const styles = StyleSheet.create({
   plantsRow: { paddingLeft: 16, marginTop: 10 },
   plantCard: {
     width: 160,
-    backgroundColor: AppColors.white,
+backgroundColor: '#FFFFFF',
     borderRadius: 16,
     marginRight: 12,
     padding: 12,
@@ -195,7 +224,7 @@ const styles = StyleSheet.create({
   },
   plantImage: { width: '100%', height: 120, resizeMode: 'contain', borderRadius: 8 },
   plantImageFallback: {
-    backgroundColor: '#F3F3F3',
+       backgroundColor: '#FFFFFF',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -226,7 +255,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
     marginTop: 12,
     padding: 12,
-    backgroundColor: AppColors.white,
+backgroundColor: '#FFFFFF',
     borderRadius: 14,
     elevation: 2,
     shadowColor: '#000',

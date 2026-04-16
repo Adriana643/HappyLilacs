@@ -55,6 +55,10 @@ export default function TabsLayout() {
           }}
         />
       ))}
+      <Tabs.Screen
+        name="plants-info"
+        options={{ href: null, headerShown: false }}
+      />
     </Tabs>
   );
 }
